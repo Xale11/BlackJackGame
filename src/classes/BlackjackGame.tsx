@@ -1,5 +1,5 @@
-import { BlackjackDeck } from "./CardHandling"
-import { BlackjackPlayer } from "./PlayerHandling"
+import { BlackjackDeck } from "./BlackjackCards"
+import { BlackjackPlayer } from "./BlackjackPlayer"
 
 export class BlackJack {
 
@@ -19,9 +19,12 @@ export class BlackJack {
   }
 
   startGame(){
+    //shuffle deck
+    this.deck.shuffle()
     // at the start of the game everyone recieves two cards
     for (const player of this.players){
-      player.recieveCards(this.deck.giveCard(2))
+      const cards = this.deck.giveCard(2)
+      player.recieveCards(cards)
     }
 
     // sets current player
@@ -40,8 +43,8 @@ export class BlackJack {
     // placing dealer first so it is easier to identify who dealer
     // is in the class array. ALways index 0
     const players = [dealer, player]
-    for (let i = 0; i <= numPlayers - 1; i++){
-      players.push(BlackjackPlayer.createNewPlayer(false))
+    for (let i = 0; i < numPlayers - 1; i++){
+      players.push(BlackjackPlayer.createNewPlayer(false, true))
     }
     return players
   }

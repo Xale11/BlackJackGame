@@ -1,29 +1,32 @@
 import { v4 as uuidv4 } from "uuid";
-import { BlackjackDeck, BlackjackCard } from "./CardHandling";
+import { BlackjackDeck, BlackjackCard } from "./BlackjackCards";
+import { probabilityOutput } from "../utils/probabilityHandling";
 
 export class BlackjackPlayer {
 
   playerId: string
   isDealer: boolean;
+  isAi: boolean;
   hand: BlackjackCard[] = [];
   possibleScores: number[] = [0];
   isWinner: boolean | undefined // if undefined it's a draw
   isBust: boolean = false;
   name?: string | undefined;
 
-  constructor(isDealer: boolean, name?: string){
+  constructor(isDealer: boolean, name?: string, isAi?: boolean){
     this.playerId = uuidv4()
     this.isDealer = isDealer
     this.name = name
     this.isWinner = false
+    this.isAi = isAi ? isAi : false
   }
 
-  static createNewPlayer(isDealer: boolean): BlackjackPlayer{
-    return new BlackjackPlayer(isDealer)
+  static createNewPlayer(isDealer: boolean, isAi?: boolean): BlackjackPlayer{
+    return new BlackjackPlayer(isDealer, undefined, isAi)
   }
 
 
-  calculatePossibleScores(): void{
+  getPossibleScores(): void{
     return
   }
 
@@ -138,6 +141,70 @@ export class BlackjackPlayer {
 
   showHand(){
     return this.hand
+  }
+
+  // can be used for AI or if timer is up
+  automateNextPlay = (deck: BlackjackDeck, dealer: BlackjackPlayer) => {
+
+    if (!dealer.isDealer){
+      console.log("The player you are referencing is not the dealer")
+      return
+    }
+
+    const upCard = dealer.hand[0].value[0] // dealer upcard
+    const score = this.evaluate() // highest valid score
+    let secondScoreOffset = 0 // lowest score needed when ace it present alter the decision/outcome made by the algorithm
+   
+    if (this.possibleScores.length >= 1 && score !== this.possibleScores[0]){ // need to check that are not multiple scores but only one is valid
+      // ace is present in deck
+      const lowestScore = this.possibleScores[0]
+      if (lowestScore < 10){ // 10 or above would mean a blackjack or bust
+        secondScoreOffset = (12 - lowestScore) / 2 // having an ace improves odds of winning and increase player confidence
+      }
+    }
+
+    if (score < 12){
+      return "hit"
+    } else if (score >= 12 && score <= 14){
+
+      const percentage = 85 // the probability as a percentage they will hit
+      // I want the play to be slightly unpredictable to replicate possible things players will do
+      // that why it's stochastic outcome instead deterministic
+
+      if (probabilityOutput(percentage + secondScoreOffset)){
+        return "hit"
+      } else {
+        return "stand"
+      }
+
+    } else if (score >= 15 && score <= 16){
+      // After researching how to strategically play blackjack within this range, you play based on the dealers upcard to improve your odds of winning. This will make the AI slightly more competitive
+      let percentage: number
+
+      if (upCard >= 4 && upCard <= 6){
+        // ~41% chance dealer will bust (best odds in this situation)
+        percentage = 65
+      } else {
+        percentage = 45
+      }
+
+      if (probabilityOutput(percentage + secondScoreOffset)){
+        return "hit"
+      } else {
+        return "stand"
+      }
+
+    } else {
+      // for score 17, 18, 19, 20
+      const percentage = 2 // it is a bad move to hit with hard scores close to 20
+      const offset = (20 - score) * 2 // the further the away from 21 the score, the higher the higher chance a player may risk (still very low)
+      // based on odds of busting from another hit & player behaviour
+      if (probabilityOutput(percentage + offset + secondScoreOffset)){
+        return "hit"
+      } else {
+        return "stand"
+      }
+    }
   }
  
 }

@@ -38,7 +38,7 @@ export class BlackjackDeck {
   }
 
   removeCard(removedCard: Card){
-    this.cards = this.cards.filter((card) => card.cardId === removedCard.cardId)
+    this.cards = this.cards.filter((card) => card.cardId !== removedCard.cardId)
   }
 
   giveCard(numCards?: number){
@@ -46,7 +46,7 @@ export class BlackjackDeck {
     const cardList: Card[] = []
     // Deck will already be shuffled
     // simulates picking the top card
-    for (let i = 0; i <= cardsGiven; i++){
+    for (let i = 0; i < cardsGiven; i++){
       const card = this.cards[this.cards.length - 1]
       this.removeCard(card)
       cardList.push(card)
@@ -93,12 +93,12 @@ export class BlackjackDeck {
         { cardId: uuidv4(), label: `A${suit}`, value: [1, 11], url: "" },
       ])
     ];
-    console.log(deck)
+    // console.log(deck)
     return deck
   }
 
   showDeck(){
-    console.log(this.cards)
+    // console.log(this.cards)
     return this.cards
   }
 
