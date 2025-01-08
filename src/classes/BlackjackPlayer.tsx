@@ -9,15 +9,16 @@ export class BlackjackPlayer {
   isAi: boolean;
   hand: BlackjackCard[] = [];
   possibleScores: number[] = [0];
-  isWinner: boolean | undefined // if undefined it's a draw
+  isWinner: boolean = false
+  isDraw: boolean = false
   isBust: boolean = false;
+  isFinished: boolean = false; // tracks when they have finished their turn
   name?: string | undefined;
 
   constructor(isDealer: boolean, name?: string, isAi?: boolean){
     this.playerId = uuidv4()
     this.isDealer = isDealer
     this.name = name
-    this.isWinner = false
     this.isAi = isAi ? isAi : false
   }
 
@@ -26,14 +27,15 @@ export class BlackjackPlayer {
   }
 
 
-  getPossibleScores(): void{
-    return
-  }
+  endgameStatus = (): string => this.isDraw ? "Draw" : `${this.isWinner ? "Win" : "Lose"}`
 
   recieveCards(cards: BlackjackCard[]): void{
     for (const card of cards){
       this.hand.push(card)
       this.possibleScores = BlackjackPlayer.calculatePossibleScores(this.possibleScores, card.value)
+      if (this.evaluate() == 21){
+        this.isFinished = true
+      }
     }
   }
 
@@ -42,9 +44,13 @@ export class BlackjackPlayer {
     const card = deck.giveCard()
     this.hand.push(card[0])
     this.possibleScores = BlackjackPlayer.calculatePossibleScores(this.possibleScores, card[0].value)
+    if (this.evaluate() == 21){
+      this.isFinished = true
+    }
   }
 
   stand(): void{
+    this.isFinished = true
     return
   }
 
@@ -64,44 +70,45 @@ export class BlackjackPlayer {
     }
   }
 
-  // this call should only be called once a game is over
   // if not isWinner will be set true if certain conditions are met mid game
-  // TODO: add another variable that take Game class and check for game state
-  checkIfWinner(dealer: BlackjackPlayer): boolean | undefined {
-
-    // to check whether you a player has won, their needs to be compares
-    // with the dealer. Therefore, a check that a dealer is used in the comparison is needed
+  checkIfWinner(dealer: BlackjackPlayer) {
+    // to check whether you a player has won, their needs to be a comparison with the dealer. Therefore, a check that a dealer is used in the comparison is needed
     if (!dealer.isDealer){
       console.log("This is not the dealer! Return will always be false")
-      return false
+      return
     }
 
-    // finds your closest score to 21. Could be a valid or invalid score
-    // bust state is set within the evaluate() function
+    // finds your closest score to 21. Could be a valid or invalid score. Bust state is set within the evaluate() function
     const score = this.evaluate()
 
     if (dealer.evaluate() === score && score <= 21){
       // when score is equal natural blackjacks can determine a winner
       if (this.hasNaturalBlackjack() && dealer.hasNaturalBlackjack()){
-        return false
+        this.isDraw = true
+        return
       } else if (this.hasNaturalBlackjack()) {
         this.isWinner = true
-        return true
+        return
+      } else if (dealer.hasNaturalBlackjack()) {
+        return
       } else {
-        this.isWinner = undefined
-        return undefined
+        this.isDraw = true
+        return
       }
     } 
     // if you score equals 21 you win
-    else if (this.evaluate() === 21) {
+    else if (score === 21) {
       this.isWinner = true
-      return true
+      return
     } 
     // higher score than dealer equals a win
-    else if (dealer.evaluate() < this.evaluate() && this.evaluate() <= 21){
+    else if (dealer.evaluate() < 21 && dealer.evaluate() < score && score < 21){
       this.isWinner = true
-      return true
-    } else {
+      return
+    } else if (dealer.evaluate() > 21 && score < 21 ){
+      this.isWinner = true
+      return
+    }  else {
       return false
     }
 
@@ -123,7 +130,7 @@ export class BlackjackPlayer {
     }
     // Sorting here makes it easier to evaluate final score at the end of the game
     // At evaluation you can filter values over 21 leaving you with closest value to 21 at the last index
-    return output.sort()
+    return output.sort(function(a, b){return a-b});
   }
 
   hasNaturalBlackjack = (): boolean => {
@@ -139,12 +146,8 @@ export class BlackjackPlayer {
     }
   }
 
-  showHand(){
-    return this.hand
-  }
-
   // can be used for AI or if timer is up
-  automateNextPlay = (deck: BlackjackDeck, dealer: BlackjackPlayer) => {
+  automateNextPlay = (dealer: BlackjackPlayer) => {
 
     if (!dealer.isDealer){
       console.log("The player you are referencing is not the dealer")

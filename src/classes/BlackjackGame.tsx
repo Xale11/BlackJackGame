@@ -7,8 +7,8 @@ export class BlackJack {
   deck: BlackjackDeck
   isGameOn: boolean
   players: BlackjackPlayer[]
-  // tracks the number players who have played. if cycle == players.length, gameover and determine winners
-  cycle: number = 0
+  // tracks the number players who have played. if index == players.length, gameover and determine winners
+  index: number = 0
   
 
   constructor(player: BlackjackPlayer){
@@ -35,7 +35,12 @@ export class BlackJack {
   }
 
   gameOver(){
-
+    this.isGameOn = false
+    const dealer = this.players[0]
+    for (let i = 1; i < this.players.length; i++){
+      const player = this.players[i]
+      player.checkIfWinner(dealer)
+    }
   }
   
   generatePlayers(player: BlackjackPlayer, numPlayers: number): BlackjackPlayer[]{
@@ -50,21 +55,22 @@ export class BlackJack {
   }
 
   nextPlayer(){
-    if (this.cycle >= this.players.length){
+    if (this.index >= this.players.length){
       this.gameOver()
       return
     }
+    console.log(12, this.index)
     // causes index to never start at 0 which is always the dealer
-    this.cycle = this.cycle + 1
+    this.index = this.index + 1
 
-    // uses the same if statement but at this point the cycle has increase
+    // uses the same if statement but at this point the index has increase
     // therefore I slighlt different state is being checked. If greater than player.length at this 
     // it means it is the dealers turn
-    if (this.cycle  >= this.players.length){
+    if (this.index  >= this.players.length){
       this.currentPlayer = this.players[0]
 
     } else {
-      this.currentPlayer = this.players[this.cycle]
+      this.currentPlayer = this.players[this.index]
     }
     
   }

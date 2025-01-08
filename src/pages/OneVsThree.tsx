@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { BlackjackPlayer } from '../classes/BlackjackPlayer'
 import { BlackJack } from '../classes/BlackjackGame'
-import { Button, HStack, Text, VStack } from '@chakra-ui/react'
+import { Button, HStack, Spacer, VStack } from '@chakra-ui/react'
 import { dealerSequence } from '../utils/playerHandling'
+import bgImage from "../assets/blackjackBoard.png"
+import PlayerSection from '../components/PlayerSection'
 
-const TestGame = () => {
+const OneVsThree = () => {
 
   // this is the individual using the device. Will not change once the game starts
   const [user] = useState<BlackjackPlayer>(new BlackjackPlayer(false, "Alex"))
@@ -40,6 +42,7 @@ const TestGame = () => {
   }
 
   const stand = () => {
+    currentPlayer?.stand()
     nextPlayer()
   }
 
@@ -83,7 +86,7 @@ const TestGame = () => {
       } else {
         autoPlay()
       }
-    }, 1000) // simulate player thinking
+    }, 3000) // simulate player thinking
   }
 
   // prevent players from taking too long
@@ -138,25 +141,24 @@ const TestGame = () => {
 
 
   return (
-    <VStack w={"100vw"} minH={"100vh"}>
-      <HStack>
-        {game.players.map((player) => {
+    <VStack position={"relative"} w={"100vw"} minH={"100vh"} bgColor={"#105840"} bg={`url(${bgImage}), rgb(16, 88, 64)`} bgSize={"contain"} bgPos={"top"} bgRepeat={"no-repeat"}>
+      {game.players[0] && <PlayerSection player={game.players[0]} showOutcome={showOutcome} currentPlayer={currentPlayer}/>}
+      <HStack mt={"12em"} gap={"5em"}>
+        {game.players.map((player, i) => {
+          if (i == 0) return null
           return (
-            <VStack color={currentPlayer?.playerId == player?.playerId ? "red" : "white"}>
-              <Text>Id: {player.playerId}</Text>
-              <Text>Score: {player.possibleScores.join(", ")}</Text>
-              {player.name && <Text>{player.name}</Text>}
-              {player.isDealer && <Text>Dealer</Text>}
-              {showOutcome && !player.isDealer && <Text>{player.endgameStatus()}</Text>}
-            </VStack>
+            <PlayerSection player={player} showOutcome={showOutcome} currentPlayer={currentPlayer}/>
           )
         })}
       </HStack>
+      <Spacer/>
+      <HStack mb={5}>
+        <Button onClick={hit} disabled={!amICurrentPlayer()}>Hit</Button>
+        <Button onClick={stand} disabled={!amICurrentPlayer()}>Stand</Button>
+      </HStack>
       
-      <Button onClick={hit} disabled={!amICurrentPlayer()}>Hit</Button>
-      <Button onClick={stand} disabled={!amICurrentPlayer()}>Stand</Button>
     </VStack>
   )
 }
 
-export default TestGame
+export default OneVsThree
