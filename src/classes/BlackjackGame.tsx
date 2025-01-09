@@ -11,8 +11,8 @@ export class BlackJack {
   index: number = 0
   
 
-  constructor(player: BlackjackPlayer){
-    this.players = this.generatePlayers(player, 3)
+  constructor(player: BlackjackPlayer, numPlayers?: number){
+    this.players = this.generatePlayers(player, numPlayers ? numPlayers : 3)
     this.deck = new BlackjackDeck()
     this.isGameOn = false
     this.currentPlayer = undefined
