@@ -14,6 +14,8 @@ const OneVsThree = () => {
   const [currentPlayer, setCurrentPlayer] = useState<BlackjackPlayer>()
   const [cycle, setCycle] = useState<number>(0)
   const [showOutcome, setShowOutcome] = useState<boolean>(false)
+  const timeToPlayInMs = 15000
+  const aiTimeToPlayInMs = 1000
 
   // neeeded to track & clear timeouts and prevent memory leaks. Caused my laptop to crash
   const autoPlayTimer = useRef<number | null>(null)
@@ -86,12 +88,11 @@ const OneVsThree = () => {
       } else {
         autoPlay()
       }
-    }, 3000) // simulate player thinking
+    }, aiTimeToPlayInMs) // simulate player thinking
   }
 
   // prevent players from taking too long
   const autoPlayAfterTimeOut = (originalCycle: number) => {
-    const timeToPlayInMs = 15000 // 15s
     autoPlayAfterTimeOutTimer.current = window.setTimeout(() => {
       const currentCycle = cycle;
       if (currentCycle === originalCycle && !currentPlayer?.isDealer) {

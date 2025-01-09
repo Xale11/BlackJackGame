@@ -1,14 +1,16 @@
-import { StrictMode } from 'react'
+// import { StrictMode } from 'react' // causing problems with initilising blackjack games in dev 
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import TestGame from './components/TestGame.tsx'
 import { Provider } from './components/ui/provider.tsx'
-import OneVsThree from './pages/OneVsThree.tsx'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { routes } from './routes.tsx'
+
+const router = createBrowserRouter(routes)
 
 createRoot(document.getElementById('root')!).render(
   // <StrictMode>
     <Provider>
-      <OneVsThree/>
+      <RouterProvider router={router}/>
     </Provider>
   // </StrictMode>,
 )

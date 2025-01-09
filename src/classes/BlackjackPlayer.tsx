@@ -75,7 +75,7 @@ export class BlackjackPlayer {
     // to check whether you a player has won, their needs to be a comparison with the dealer. Therefore, a check that a dealer is used in the comparison is needed
     if (!dealer.isDealer){
       console.log("This is not the dealer! Return will always be false")
-      return
+      return "Not Dealer"
     }
 
     // finds your closest score to 21. Could be a valid or invalid score. Bust state is set within the evaluate() function
@@ -85,31 +85,31 @@ export class BlackjackPlayer {
       // when score is equal natural blackjacks can determine a winner
       if (this.hasNaturalBlackjack() && dealer.hasNaturalBlackjack()){
         this.isDraw = true
-        return
+        return "Draw"
       } else if (this.hasNaturalBlackjack()) {
         this.isWinner = true
-        return
+        return "Win"
       } else if (dealer.hasNaturalBlackjack()) {
-        return
+        return "Lose"
       } else {
         this.isDraw = true
-        return
+        return "Draw"
       }
     } 
     // if you score equals 21 you win
     else if (score === 21) {
       this.isWinner = true
-      return
+      return "Win"
     } 
     // higher score than dealer equals a win
     else if (dealer.evaluate() < 21 && dealer.evaluate() < score && score < 21){
       this.isWinner = true
-      return
+      return "Win"
     } else if (dealer.evaluate() > 21 && score < 21 ){
       this.isWinner = true
-      return
+      return "Win"
     }  else {
-      return false
+      return "Lose"
     }
 
   }
