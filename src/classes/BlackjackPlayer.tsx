@@ -91,7 +91,6 @@ export class BlackjackPlayer {
 
     // finds your closest score to 21. Could be a valid or invalid score. Bust state is set within the evaluate() function
     const score = this.evaluate()
-
     if (dealer.evaluate() === score && score <= 21){
       // when score is equal natural blackjacks can determine a winner
       if (this.hasNaturalBlackjack() && dealer.hasNaturalBlackjack()){

@@ -69,7 +69,6 @@ export class BlackJack {
       this.gameOver()
       return
     }
-    console.log(12, this.index)
     // causes index to never start at 0 which is always the dealer
     this.index = this.index + 1
 

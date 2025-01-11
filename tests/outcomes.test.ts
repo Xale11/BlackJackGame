@@ -73,8 +73,8 @@ describe('Outcomes', () => {
     player.possibleScores = [19]
     expect(player.checkIfWinner(dealer)).toBe("Lose")
 
-    dealer.possibleScores = [16]
-    player.possibleScores = [15]
+    dealer.possibleScores = [19]
+    player.possibleScores = [13]
     expect(player.checkIfWinner(dealer)).toBe("Lose")
 
     dealer.possibleScores = [18]

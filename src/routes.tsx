@@ -1,6 +1,5 @@
-import TestGame from "./components/TestGame";
 import Hub from "./pages/Hub";
-import OneVsThree from "./pages/OneVsThree";
+import BlackjackStandard from "./pages/BlackjackStandard";
 
 export const routes = [
   {
@@ -8,11 +7,8 @@ export const routes = [
     element: <Hub/>
   },
   {
-    path: "/test",
-    element: <TestGame/>
+    path: "/blackjack",
+    element: <BlackjackStandard/>
   },
-  {
-    path: "onevsthree",
-    element: <OneVsThree/>
-  }
+
 ]

@@ -18,10 +18,8 @@ const Hub = () => {
       </VStack>
       
       <VStack mt={5}>
-        <Button disabled={true} onClick={() => navigate(`/tutorial?name=${name}`)} w={"xs"} _hover={{w: "sm"}} transition={"300ms all ease-in-out"}>Tutorial Mode</Button>
-        <Button disabled={true} onClick={() => navigate(`/onevsdealer?name=${name}`)} w={"xs"} _hover={{w: "sm"}} transition={"300ms all ease-in-out"}>1 v 1 (Dealer)</Button>
-        <Button onClick={() => navigate(`/onevsthree?name=${name}`)} w={"xs"} _hover={{w: "sm"}} transition={"300ms all ease-in-out"}>1 v 3 (AI)</Button>
-        <Button disabled={true} onClick={() => navigate(`/online?name=${name}`)} w={"xs"} _hover={{w: "sm"}} transition={"300ms all ease-in-out"}>1 v 3 (Online)</Button>
+        <Button onClick={() => navigate(`/blackjack?name=${name}&numplayers=1`)} w={"xs"} _hover={{w: "sm"}} transition={"300ms all ease-in-out"}>1 v 1</Button>
+        <Button onClick={() => navigate(`/blackjack?name=${name}&numplayers=3`)} w={"xs"} _hover={{w: "sm"}} transition={"300ms all ease-in-out"}>1 v 3 (AI)</Button>
       </VStack>
     </VStack>
   )
