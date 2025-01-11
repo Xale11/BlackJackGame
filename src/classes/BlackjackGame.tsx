@@ -7,7 +7,7 @@ export class BlackJack {
   deck: BlackjackDeck
   isGameOn: boolean
   players: BlackjackPlayer[]
-  // tracks the number players who have played. if index == players.length, gameover and determine winners
+  // tracks the number players who have played. if index == players.length, gameover and determine winners. incremented by nextPlayer() function
   index: number = 0
   
 
@@ -32,6 +32,16 @@ export class BlackJack {
 
     this.isGameOn = true
     
+  }
+
+  resetGame(){
+    this.deck = new BlackjackDeck()
+    this.isGameOn = false
+    this.currentPlayer = undefined
+    this.index = 0
+    for (const player of this.players){
+      player.resetPlayer()
+    }
   }
 
   gameOver(){

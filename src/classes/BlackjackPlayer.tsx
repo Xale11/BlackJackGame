@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { BlackjackDeck, BlackjackCard } from "./BlackjackCards";
 import { probabilityOutput } from "../utils/probabilityHandling";
+import { playerNameList } from "../utils/playerHandling";
 
 export class BlackjackPlayer {
 
@@ -22,12 +23,22 @@ export class BlackjackPlayer {
     this.isAi = isAi ? isAi : false
   }
 
+  resetPlayer(){
+    this.hand = []
+    this.possibleScores = [0]
+    this.isWinner = false
+    this.isDraw = false
+    this.isBust = false;
+    this.isFinished = false;
+  }
+
   static createNewPlayer(isDealer: boolean, isAi?: boolean): BlackjackPlayer{
-    return new BlackjackPlayer(isDealer, undefined, isAi)
+    const index = Math.round(Math.random() * playerNameList.length - 1)
+    return new BlackjackPlayer(isDealer, playerNameList[index], isAi)
   }
 
 
-  endgameStatus = (): string => this.isDraw ? "Draw" : `${this.isWinner ? "Win" : "Lose"}`
+  endgameStatus = (): "Win" | "Draw" | "Lose" => this.isDraw ? "Draw" : `${this.isWinner ? "Win" : "Lose"}`
 
   recieveCards(cards: BlackjackCard[]): void{
     for (const card of cards){
@@ -44,7 +55,7 @@ export class BlackjackPlayer {
     const card = deck.giveCard()
     this.hand.push(card[0])
     this.possibleScores = BlackjackPlayer.calculatePossibleScores(this.possibleScores, card[0].value)
-    if (this.evaluate() == 21){
+    if (this.evaluate() >= 21){
       this.isFinished = true
     }
   }

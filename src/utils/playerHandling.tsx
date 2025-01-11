@@ -26,3 +26,16 @@ export const dealerSequence = (dealer: BlackjackPlayer, soft17: boolean) => {
     }
   }
 }
+
+export const playerNameList = [
+  "Oliver", "Emma", "Liam", "Ava", "Ethan", 
+  "Sophia", "Noah", "Isabella", "James", "Mia", 
+  "Benjamin", "Charlotte", "Lucas", "Amelia", "Henry", 
+  "Harper", "Alexander", "Evelyn", "William", "Luna", 
+  "Michael", "Ella", "Elijah", "Scarlett", "Daniel", 
+  "Grace", "Matthew", "Zoey", "Samuel", "Chloe", 
+  "Jack", "Aria", "Sebastian", "Penelope", "David", 
+  "Ellie", "Joseph", "Aurora", "Jackson", "Hannah", 
+  "Gabriel", "Lillian", "Logan", "Natalie", "Carter", 
+  "Addison", "Owen", "Stella", "Levi", "Willow"
+];

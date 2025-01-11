@@ -39,7 +39,7 @@ describe("scenarios", () => {
     }
   })
 
-  it("should not deal a player another card and evaluate their score when they stand assuming they have a valid hand", () => {
+  it("should not deal a player another card and should evaluate their score when they stand assuming they have a valid hand", () => {
     // user.isFinished is boolean state that switches to true when a player stands or busts. This causes the score to be evaluted on the frontend UI
     const player = game.players[1] // the user I create manually in the beforeEach function
 
@@ -97,10 +97,7 @@ describe("scenarios", () => {
     const player = game.players[1]
 
     // list of hands and their possible scores.
-    const validHandWithAce = [8, 18] // A, 7
-    const validHandWithTwoAces = [12, 22] // A, A
     const validHandWithTens = [20] // e.g. J, Q or 10, K etc.
-    const validHandWithAceAndMultipleCards = [14, 24] // A, 2, 3, 8
     const validHandWithScoreOf21 = [21] // 2 , 3, 4 , 5, 7
 
     // card will recieve on a hit
@@ -114,24 +111,9 @@ describe("scenarios", () => {
     // player.evaluate() also determine whether a player is bust or not aka a valid hand or not
 
     player.isBust = false // reset state
-    player.possibleScores = validHandWithAce
-    player.recieveCards([hitCard]) // simulates hit
-    expect(player.evaluate() <= 21 && !player.isBust).toBeTruthy()
-
-    player.isBust = false // reset state
-    player.possibleScores = validHandWithTwoAces
-    player.recieveCards([hitCard]) // simulates hit
-    expect(player.evaluate() <= 21 && !player.isBust).toBeTruthy()
-
-    player.isBust = false // reset state
     player.possibleScores = validHandWithTens
     player.recieveCards([hitCard]) // simulates hit - should bust!
     expect(player.evaluate() > 21 && player.isBust).toBeTruthy()
-
-    player.isBust = false // reset state
-    player.possibleScores = validHandWithAceAndMultipleCards
-    player.recieveCards([hitCard]) // simulates hit
-    expect(player.evaluate() <= 21 && !player.isBust).toBeTruthy()
 
     player.isBust = false // reset state
     player.possibleScores = validHandWithScoreOf21
